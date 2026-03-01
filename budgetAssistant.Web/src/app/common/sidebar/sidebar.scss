@@ -1,0 +1,25 @@
+@use '@angular/material' as mat;
+
+.main-container {
+  @include mat.elevation(2);
+  border-radius: var(--mat-sys-corner-medium);
+  border: 1px solid rgba(177, 177, 177, 0.459);
+  width: 250px;
+  height: calc(100% - 45px);
+  margin: 15px 10px;
+  padding: 10px;
+
+  @include mat.list-overrides(
+    (
+      active-indicator-color: var(--mat-sys-surface-dim),
+      active-indicator-shape: 8px,
+      list-item-container-shape: 8px,
+    )
+  );
+}
+
+.section-header {
+  font: var(--mat-sys-label-md);
+  letter-spacing: var(--mat-sys-label-md-tracking);
+  color: var(--mat-sys-on-surface-variant);
+}
