@@ -1,0 +1,29 @@
+<div class="main-container">
+
+    <p class="section-header">Main</p>
+
+    <mat-nav-list>
+        @for (page of main; track page) {
+        <a mat-list-item [routerLink]="page.link" (click)="$event.preventDefault(); activeLink=page.link;"
+            [activated]="activeLink===page.link">
+            <mat-icon matListItemIcon>{{page.icon}}</mat-icon>
+            {{page.title}}</a>
+        }
+
+    </mat-nav-list>
+
+    <p class="section-header">Utilities</p>
+
+    <mat-nav-list>
+
+        @for (page of utilities; track page) {
+        
+        <a mat-list-item [routerLink]="page.link" (click)="$event.preventDefault(); activeLink=page.link;"
+            [activated]="activeLink===page.link">
+            <mat-icon matListItemIcon>{{page.icon}}</mat-icon>
+            {{page.title}}</a>
+        }
+
+    </mat-nav-list>
+
+</div>

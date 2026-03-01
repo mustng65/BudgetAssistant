@@ -1,0 +1,35 @@
+<h1>Tithing Calculator</h1>
+
+
+<form class="paycheck-form" [formGroup]="paycheckForm">
+
+    <mat-form-field>
+        <mat-label>Paycheck Amount</mat-label>
+        <input matInput placeholder="0.00" formControlName="paycheckAmt">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>401(k) Deduction</mat-label>
+        <input matInput placeholder="0.00" formControlName="retirementDeduction">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Remaining Paycheck</mat-label>
+        <input matInput placeholder="$0.00" value="{{remainingPaycheckAmt}}" readonly>
+    </mat-form-field>
+
+
+    <mat-form-field>
+        <mat-label>Extra Income</mat-label>
+        <input matInput placeholder="$0.00" formControlName="extraIncome">
+    </mat-form-field>
+
+
+    <mat-form-field appearance="outline">
+        <mat-label>Tithing Amount</mat-label>
+        <input matInput placeholder="$0.00" value="{{tithing}}" readonly>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Savings Amount</mat-label>
+        <input matInput placeholder="$0.00" value="{{savings}}" readonly>
+    </mat-form-field>
+</form>
