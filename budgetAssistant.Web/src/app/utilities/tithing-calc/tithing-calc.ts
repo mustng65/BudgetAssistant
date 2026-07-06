@@ -12,15 +12,17 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ActualBudgetService } from '../../services/actual-budget.service';
 import { MatSelectModule } from '@angular/material/select';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { provideLuxonDateAdapter } from '@angular/material-luxon-adapter';
+import { DateTime } from 'luxon';
 
 export const MY_FORMATS = {
   parse: {
-    dateInput: 'yyyy-MM',
+    dateInput: 'MM/yyyy',
   },
   display: {
-    dateInput: 'yyyy-MM',
+    dateInput: 'MM/yyyy',
     monthYearLabel: 'MMM yyyy',
     dateA11yLabel: 'DD',
     monthYearA11yLabel: 'MMMM yyyy',
@@ -40,7 +42,7 @@ export const MY_FORMATS = {
   ],
   templateUrl: './tithing-calc.html',
   styleUrl: './tithing-calc.scss',
-  providers: [provideNativeDateAdapter(MY_FORMATS)],
+  providers: [provideLuxonDateAdapter(MY_FORMATS)],
 })
 export class TithingCalc implements OnInit {
   remainingPaycheckAmt: string = '0';
@@ -69,6 +71,7 @@ export class TithingCalc implements OnInit {
     });
 
     this.paycheckForm.get('budgetDate')?.valueChanges.subscribe((value) => {
+      console.log('budgetDate valueChanges', value);
       if (this.paycheckForm.get('mode')?.value == 'manual' || value == null) {
         return;
       }
@@ -97,7 +100,7 @@ export class TithingCalc implements OnInit {
           });
         },
         error: (e) => {
-          this.paycheckForm.get('budgetDate')?.setErrors({monthLoadError: e.error.error});
+          this.paycheckForm.get('budgetDate')?.setErrors({ monthLoadError: e.error.error });
         },
       });
     });
@@ -132,5 +135,15 @@ export class TithingCalc implements OnInit {
         this.currencySymbol,
       );
     });
+  }
+  setMonthAndYear(normalizedMonthAndYear: DateTime, datepicker: MatDatepicker<DateTime>) {
+    const ctrlValue = DateTime.fromObject({
+      month: normalizedMonthAndYear.month,
+      year: normalizedMonthAndYear.year,
+    });
+
+    const selectedDate = new Date(ctrlValue.year, ctrlValue.month - 1, 1);
+    this.paycheckForm.get('budgetDate')?.setValue(selectedDate);
+    datepicker.close();
   }
 }
