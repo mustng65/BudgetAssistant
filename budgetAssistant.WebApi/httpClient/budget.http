@@ -4,3 +4,6 @@
 
 GET http://localhost:3000/budgets/{{year}}/{{month}}
 ###
+
+GET http://localhost:3000/transactions/Buckets/{{year}}/{{month}}
+###

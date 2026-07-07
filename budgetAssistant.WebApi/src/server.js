@@ -1,7 +1,7 @@
 import 'dotenv/config'; // Load variables from .env
 import express from 'express';
 import cors from 'cors';
-import { budgetMonthsList, budgetMonthGet, initActualApi, shutdownActualApi } from './services/actualApi.js';
+import { budgetMonthsList, budgetMonthGet, initActualApi, shutdownActualApi, transactionsCategoryGroupMonthList } from './services/actualApi.js';
 import logger from './logging/logger.js';
 import { asyncHandler } from './middleware/asyncHandler.js';
 import { errorHandler } from './middleware/errorHandler.js';
@@ -31,6 +31,16 @@ app.get('/budgets/:year/:month', asyncHandler(async (req, res) => {
   const budget = await budgetMonthGet(`${req.params.year}-${req.params.month}`)
   res.set('Cache-Control', 'no-store');
   res.status(200).json(budget);
+
+}));
+
+app.get('/transactions/:categoryGroup/:year/:month', asyncHandler(async (req, res) => {
+
+  const budget = await transactionsCategoryGroupMonthList(req.params.categoryGroup, `${req.params.year}-${req.params.month}`)
+  const response = Object.groupBy(budget.data, transaction => transaction["category.name"])
+
+  res.set('Cache-Control', 'no-store');
+  res.status(200).json(response);
 
 }));
 

@@ -29,9 +29,9 @@ export const initActualApi = async () => {
     await api.downloadBudget(process.env.ACTUAL_SYNC_ID);
     logger.info('Actual API initialized and budget downloaded.');
   } catch (error) {
-    logger.error('Failed to initialize Actual API', { 
+    logger.error('Failed to initialize Actual API', {
       error: error.message,
-      stack: error.stack 
+      stack: error.stack
     });
     api = null; // Reset on failure so retry can happen
     throw error;
@@ -68,12 +68,12 @@ const runWithApi = async (label, fn, { syncBefore = true, syncAfter = false } = 
     try {
       await instance.sync();
     } catch (error) {
-      logger.error('[Actual] Sync failed before operation', { 
-        label, 
+      logger.error('[Actual] Sync failed before operation', {
+        label,
         error: error.message,
-        stack: error.stack 
+        stack: error.stack
       });
-      
+
       // If sync fails with getPrefs null error, the budget might not be loaded
       // Try to re-download the budget and retry once
       if (error.message?.includes('getPrefs') || error.message?.includes('Cannot destructure')) {
@@ -83,8 +83,8 @@ const runWithApi = async (label, fn, { syncBefore = true, syncAfter = false } = 
           await instance.sync(); // Retry sync after re-download
           logger.info('[Actual] Budget re-downloaded and synced successfully');
         } catch (retryError) {
-          logger.error('[Actual] Retry failed after re-download', { 
-            error: retryError.message 
+          logger.error('[Actual] Retry failed after re-download', {
+            error: retryError.message
           });
           throw new Error(`Budget synchronization failed. The budget may not be properly initialized. Please verify ACTUAL_SYNC_ID (${process.env.ACTUAL_SYNC_ID}) is correct and the Actual Budget server is accessible. Original error: ${error.message}`);
         }
@@ -101,10 +101,10 @@ const runWithApi = async (label, fn, { syncBefore = true, syncAfter = false } = 
     try {
       await instance.sync();
     } catch (error) {
-      logger.error('[Actual] Sync failed after operation', { 
-        label, 
+      logger.error('[Actual] Sync failed after operation', {
+        label,
         error: error.message,
-        stack: error.stack 
+        stack: error.stack
       });
       // Don't fail the operation if post-sync fails, but log it
       // The operation itself succeeded, so we don't want to lose that
@@ -115,7 +115,6 @@ const runWithApi = async (label, fn, { syncBefore = true, syncAfter = false } = 
   logger.info('[Actual] operation completed', { label, durationMs: duration });
   return result;
 };
-
 
 // ================ BUDGETS ================
 export const budgetMonthsList = async () => {
@@ -135,3 +134,22 @@ export const budgetMonthGet = async (month) => {
     return budgetMonth;
   });
 };
+
+
+
+// ================ TRANSACTIONS ================
+export const transactionsCategoryGroupMonthList = async (categoryGroup, month) => {
+  return runWithApi('transactionsMonthBucketsList', async (apiInstance) => {
+    logger.debug('[Actual] Getting budget month category transactions', { month });
+
+    const transactions = await apiInstance.runQuery(apiInstance.q('transactions')
+      .filter({
+        'category.group.name': categoryGroup,
+        date: { $transform: '$month', $eq: month },
+      })
+      .select(['payee.name', 'date', 'amount', 'category.name', 'notes']));
+
+    logger.info('[Actual] transactionsMonthBucketsList result', { month, recordsFound: transactions.data.length });
+    return transactions;
+  });
+}
