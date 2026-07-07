@@ -140,7 +140,7 @@ export const budgetMonthGet = async (month) => {
 // ================ TRANSACTIONS ================
 export const transactionsCategoryGroupMonthList = async (categoryGroup, month) => {
   return runWithApi('transactionsMonthBucketsList', async (apiInstance) => {
-    logger.debug('[Actual] Getting budget month category transactions', { month });
+    logger.debug('[Actual] Getting budget month category transactions', { categoryGroup, month });
 
     const transactions = await apiInstance.runQuery(apiInstance.q('transactions')
       .filter({
