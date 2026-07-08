@@ -87,10 +87,7 @@ export class TithingCalc implements OnInit {
       this.budget.getBudget(year, month).subscribe({
         next: (res) => {
           const incomeGroup = res.categoryGroups.filter((c) => c['name'] == 'Income')[0];
-          const incomeList = incomeGroup['categories'] as Array<{
-            name: string;
-            received: number;
-          }>;
+          const incomeList = incomeGroup.categories
           const incomeAmt = incomeList.filter((c) => c.name == 'Income')[0];
           const extraAmt = incomeList.filter((c) => c.name == 'Extra Income')[0];
 

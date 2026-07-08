@@ -37,7 +37,16 @@ app.get('/budgets/:year/:month', asyncHandler(async (req, res) => {
 app.get('/transactions/:categoryGroup/:year/:month', asyncHandler(async (req, res) => {
 
   const budget = await transactionsCategoryGroupMonthList(req.params.categoryGroup, `${req.params.year}-${req.params.month}`)
-  const response = Object.groupBy(budget.data, transaction => transaction["category.name"])
+  const groups = Object.groupBy(budget.data, transaction => transaction["category.name"])
+
+  const response = [];
+  for (let key in groups) {
+    response.push({
+      id: groups[key][0]["category.id"],
+      name: key,
+      transactions: groups[key]
+    });
+  }
 
   res.set('Cache-Control', 'no-store');
   res.status(200).json(response);
