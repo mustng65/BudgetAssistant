@@ -1,10 +1,12 @@
 @use '@angular/material' as mat;
 
 .work-area{
-    height: 95%;
+    height: calc(100% - 35px);;
     overflow-y:scroll;
-    margin-top: 15px;
+    margin-top: 20px;
     padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .bucket-container{
@@ -16,3 +18,18 @@
      }
 }
 
+.header {
+  @include mat.elevation(2);
+  border-radius: var(--mat-sys-corner-medium);
+  border: 1px solid rgba(177, 177, 177, 0.459);
+  width: calc(100% - 350px);
+  height: 30px;
+  margin-top: 15px;
+  padding: 10px;
+
+  background-color: color-mix(in srgb,var(--mat-sys-surface) 90%, transparent);
+
+  position: absolute;
+  z-index: 100;
+  
+}
