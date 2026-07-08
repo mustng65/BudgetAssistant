@@ -1,0 +1,25 @@
+<div class="work-area">
+    <div style="display: flex;gap: 10px;flex-wrap: wrap;">
+        @for (item of bucketGroup?.categories; track $index) {
+
+        <mat-card class="bucket-container" appearance="outlined">
+            <mat-card-header>
+                <!-- <div mat-card-avatar class="example-header-image"></div> -->
+                <mat-card-title>{{item.name}}</mat-card-title>
+                <mat-card-subtitle>{{item.budgeted/100 | currency}} | {{item.spent/100 | currency}} | {{item.balance/100
+                    |
+                    currency}}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                @for (transaction of item.transactions; track $index) {
+                <div>{{transaction.date}} | {{transaction['payee.name']}} | {{transaction.amount/100*-1 | currency}}</div>
+                }
+            </mat-card-content>
+            <!-- <mat-card-actions>
+    <button matButton>LIKE</button>
+    <button matButton>SHARE</button>
+  </mat-card-actions> -->
+        </mat-card>
+        }
+    </div>
+</div>
