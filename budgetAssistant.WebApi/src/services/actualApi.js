@@ -147,7 +147,7 @@ export const transactionsCategoryGroupMonthList = async (categoryGroup, month) =
         'category.group.name': categoryGroup,
         date: { $transform: '$month', $eq: month },
       })
-      .select(['payee.name', 'date', 'amount', 'category.name', 'notes']));
+      .select(['payee.name', 'date', 'amount', 'category.name','category.id', 'notes']));
 
     logger.info('[Actual] transactionsMonthBucketsList result', { month, recordsFound: transactions.data.length });
     return transactions;
