@@ -37,13 +37,17 @@
             </mat-card-header>
             <mat-card-content>
 
-                @for (transaction of category.transactions; track transaction.id) {
-                <div style="display: flex; justify-content: space-between;">
-                    <div>{{transaction.date}}</div>
-                    <div style="text-overflow: ellipsis;max-width:230px;overflow: hidden;white-space: nowrap;">{{transaction['payee.name']}}</div>
-                    <div>{{transaction.amount/100*-1 | currency}}</div>
+                <div class="transaction-container">
+                    @for (transaction of category.transactions; track transaction.id) {
+                    <div style="display: flex; justify-content: space-between;">
+                        <div>{{transaction.date}}</div>
+                        <div style="text-overflow: ellipsis;max-width:230px;overflow: hidden;white-space: nowrap;">
+                            {{transaction['payee.name']}}</div>
+                        <div>{{transaction.amount/100*-1 | currency}}</div>
+                    </div>
+                    }
+
                 </div>
-                }
 
             </mat-card-content>
 

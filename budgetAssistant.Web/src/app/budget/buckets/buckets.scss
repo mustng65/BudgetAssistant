@@ -63,3 +63,11 @@
     )
   );
 }
+
+.transaction-container {
+  width: 100%;
+  max-height: 310px;
+  overflow-y: scroll;
+  padding-right: 10px;
+
+}
