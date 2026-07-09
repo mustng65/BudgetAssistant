@@ -1,8 +1,9 @@
 <div class="header">
-    <mat-form-field>
+    <div class="selected-date">{{date.value?.monthLong}} {{date.value?.year}}</div>
+    <mat-form-field appearance="outline">
         <mat-label>Choose a Month and Year</mat-label>
         <input matInput [matDatepicker]="dp" [formControl]="date">
-        <mat-hint>MM/YYYY</mat-hint>
+        <!-- <mat-hint>MM/YYYY</mat-hint> -->
         <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
         <mat-datepicker #dp startView="multi-year" (monthSelected)="setMonthAndYear($event, dp)"
             panelClass="example-month-picker">
@@ -12,21 +13,22 @@
 </div>
 
 <div class="work-area">
-    @if (bucketGroup) {
+    @if (bucketGroup()) {
     <div style="display: flex;gap: 10px;flex-wrap: wrap;padding-top: 70px;">
-        @for (item of bucketGroup.categories; track $index) {
+        @for (category of bucketGroup(); track category.id) {
 
         <mat-card class="bucket-container" appearance="outlined">
             <mat-card-header>
                 <!-- <div mat-card-avatar class="example-header-image"></div> -->
-                <mat-card-title>{{item.name}}</mat-card-title>
-                <mat-card-subtitle>{{item.budgeted/100 | currency}} | {{item.spent/100 | currency}} | {{item.balance/100
+                <mat-card-title>{{category.name}}</mat-card-title>
+                <mat-card-subtitle>{{category.budgeted/100 | currency}} | {{category.spent/100 | currency}} |
+                    {{category.balance/100
                     |
                     currency}}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
-                @if(item.transactions){
-                @for (transaction of item.transactions; track $index) {
+                @if(category.transactions){
+                @for (transaction of category.transactions; track transaction.id) {
                 <div>{{transaction.date}} | {{transaction['payee.name']}} | {{transaction.amount/100*-1 | currency}}
                 </div>
                 }

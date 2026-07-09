@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ActualBudgetService, CategoryGroup } from '../../services/actual-budget.service';
+import { Component, computed, OnInit, signal } from '@angular/core';
+import { ActualBudgetService, CategoryGroup, Category } from '../../services/actual-budget.service';
 import { MatCardModule } from '@angular/material/card';
 import { CurrencyPipe } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -23,21 +23,22 @@ import { MatInputModule } from '@angular/material/input';
   styleUrl: './buckets.scss',
 })
 export class Buckets implements OnInit {
-  bucketGroup?: CategoryGroup;
+  bucketGroup = signal<Category[]>([]);
   date!: FormControl<DateTime | null>;
 
   constructor(private budget: ActualBudgetService) {}
+
   ngOnInit(): void {
-    this.date = new FormControl<DateTime>(DateTime.now().minus({ month: 1 }));
+    this.date = new FormControl<DateTime>(DateTime.now());
 
     this.loadBuckets(this.date.value!);
 
-    // this.date.valueChanges.subscribe((value) => {
-    //   console.log('Date Changed: ' + value?.toFormat('MM/dd/yyyy'));
-    //   if (value == null) return;
+    this.date.valueChanges.subscribe((value) => {
+      console.log('Date Changed: ' + value?.toFormat('MM/dd/yyyy'));
+      if (value == null) return;
 
-    //   this.loadBuckets(value);
-    // });
+      this.loadBuckets(value);
+    });
   }
 
   loadBuckets(value: DateTime<boolean>) {
@@ -47,22 +48,16 @@ export class Buckets implements OnInit {
     this.budget.getBudget(year, month).subscribe((res) => {
       const group = res.categoryGroups.filter((group) => group['name'] === 'Buckets')[0];
 
-      console.log('Got group');
-
       this.budget.getCategoryGroups(year, month).subscribe((categories) => {
-        console.log('Got group - transactions');
 
         group.categories.forEach((category) => {
           const groupWithTransactions = categories.filter((g) => g['name'] === category.name)[0];
 
           if (groupWithTransactions) {
-            console.log('found matching group: ' + category.name);
             category.transactions = groupWithTransactions.transactions;
           }
         });
-        console.log('Set bucket group - start');
-        this.bucketGroup = group;
-        console.log('Set bucket group - end');
+        this.bucketGroup.set(group.categories);
       });
     });
   }

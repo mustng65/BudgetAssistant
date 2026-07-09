@@ -1,21 +1,21 @@
 @use '@angular/material' as mat;
 
-.work-area{
-    height: calc(100% - 35px);;
-    overflow-y:scroll;
-    margin-top: 20px;
-    padding-bottom: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
+.work-area {
+  height: calc(100% - 35px);
+  overflow-y: scroll;
+  margin-top: 20px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
-.bucket-container{
-    width: 400px;
-    min-height: 400px;
-     @include mat.elevation(2);
-     &:hover{
-        @include mat.elevation(4);
-     }
+.bucket-container {
+  width: 400px;
+  min-height: 400px;
+  @include mat.elevation(2);
+  &:hover {
+    @include mat.elevation(4);
+  }
 }
 
 .header {
@@ -23,13 +23,43 @@
   border-radius: var(--mat-sys-corner-medium);
   border: 1px solid rgba(177, 177, 177, 0.459);
   width: calc(100% - 350px);
-  height: 30px;
+  height: 35px;
   margin-top: 15px;
   padding: 10px;
 
-  background-color: color-mix(in srgb,var(--mat-sys-surface) 90%, transparent);
+  background-color: color-mix(in srgb, var(--mat-sys-surface) 90%, transparent);
 
   position: absolute;
   z-index: 100;
-  
+
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+
+  .selected-date {
+    font-size: 30px;
+    font-weight: 600;
+    align-self: center;
+    flex-grow: 1;
+    opacity: .84;
+  }
+
+  @include mat.form-field-overrides(
+    (
+      container-height: 30px,
+      container-text-line-height: var(--mat-sys-body-small-line-height),
+      container-vertical-padding: 10px,
+      filled-with-label-container-padding-top: 0px,
+      filled-with-label-container-padding-bottom: 0px,
+      container-text-size: var(--mat-sys-body-medium-size),
+    )
+  );
+
+  @include mat.icon-button-overrides(
+    (
+      icon-size: 20px,
+      touch-target-size: 20px,
+      state-layer-size: 30px,
+    )
+  );
 }
