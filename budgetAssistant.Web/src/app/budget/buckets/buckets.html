@@ -21,17 +21,28 @@
             <mat-card-header>
                 <!-- <div mat-card-avatar class="example-header-image"></div> -->
                 <mat-card-title>{{category.name}}</mat-card-title>
-                <mat-card-subtitle>{{category.budgeted/100 | currency}} | {{category.spent/100 | currency}} |
-                    {{category.balance/100
-                    |
-                    currency}}</mat-card-subtitle>
+                <mat-card-subtitle style="display: flex; flex-direction: column;width: 370px;">
+                    <div style="display: flex; justify-content: space-between; font-size: smaller;opacity: .64;">
+                        <div>Budget</div>
+                        <div>Spent</div>
+                        <div>Balance</div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <div>{{category.budgeted/100 | currency}}</div>
+                        <div>{{category.spent/100 | currency}}</div>
+                        <div>{{category.balance/100 | currency}}</div>
+                    </div>
+
+                </mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
-                @if(category.transactions){
+
                 @for (transaction of category.transactions; track transaction.id) {
-                <div>{{transaction.date}} | {{transaction['payee.name']}} | {{transaction.amount/100*-1 | currency}}
+                <div style="display: flex; justify-content: space-between;">
+                    <div>{{transaction.date}}</div>
+                    <div style="text-overflow: ellipsis;max-width:230px;overflow: hidden;white-space: nowrap;">{{transaction['payee.name']}}</div>
+                    <div>{{transaction.amount/100*-1 | currency}}</div>
                 </div>
-                }
                 }
 
             </mat-card-content>
