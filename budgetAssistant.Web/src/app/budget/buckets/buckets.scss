@@ -10,7 +10,7 @@
 }
 
 .bucket-container {
-  width: 400px;
+  width: 420px;
   min-height: 400px;
   @include mat.elevation(2);
   &:hover {
@@ -27,7 +27,9 @@
   margin-top: 15px;
   padding: 10px;
 
-  background-color: color-mix(in srgb, var(--mat-sys-surface) 90%, transparent);
+  background-color: color-mix(in srgb, var(--mat-sys-secondary-container) 90%, transparent);
+
+  color: var(--mat-sys-on-secondary-container);
 
   position: absolute;
   z-index: 100;
@@ -65,9 +67,27 @@
 }
 
 .transaction-container {
-  width: 100%;
-  max-height: 310px;
+  width: calc(100% - 20px);
+  height: 300px;
   overflow-y: scroll;
-  padding-right: 10px;
+  padding: 10px;
 
+  border-color: var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-medium);
+  border-width: 1px;
+  border-style: solid;
+
+  background-color: var(--mat-sys-surface-container-low);
+
+  &-record{
+    display: flex; 
+    justify-content: space-between;
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+    padding-top: 4px;
+    padding-bottom: 2px;
+
+    &:nth-child(odd) {
+      background-color: var(--mat-sys-surface-container-high);
+    }
+  }
 }

@@ -1,7 +1,7 @@
 import { Component, computed, OnInit, signal } from '@angular/core';
 import { ActualBudgetService, CategoryGroup, Category } from '../../services/actual-budget.service';
 import { MatCardModule } from '@angular/material/card';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
 import { DateTime } from 'luxon';
@@ -18,6 +18,7 @@ import { MatInputModule } from '@angular/material/input';
     MatDatepickerModule,
     FormsModule,
     ReactiveFormsModule,
+    DatePipe
   ],
   templateUrl: './buckets.html',
   styleUrl: './buckets.scss',

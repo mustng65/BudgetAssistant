@@ -35,12 +35,12 @@
 
                 </mat-card-subtitle>
             </mat-card-header>
-            <mat-card-content>
+            <mat-card-content style="height: 100%;">
 
                 <div class="transaction-container">
                     @for (transaction of category.transactions; track transaction.id) {
-                    <div style="display: flex; justify-content: space-between;">
-                        <div>{{transaction.date}}</div>
+                    <div class="transaction-container-record">
+                        <div>{{transaction.date | date:'MMM dd, EEE' }}</div>
                         <div style="text-overflow: ellipsis;max-width:230px;overflow: hidden;white-space: nowrap;">
                             {{transaction['payee.name']}}</div>
                         <div>{{transaction.amount/100*-1 | currency}}</div>
