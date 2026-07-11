@@ -39,12 +39,17 @@
 
                 <div class="transaction-container">
                     @for (transaction of category.transactions; track transaction.id) {
-                    <div class="transaction-container-record">
-                        <div>{{transaction.date | date:'MMM dd, EEE' }}</div>
-                        <div style="text-overflow: ellipsis;max-width:230px;overflow: hidden;white-space: nowrap;">
-                            {{transaction['payee.name']}}</div>
-                        <div>{{transaction.amount/100*-1 | currency}}</div>
+                    <div class="transaction-container-row">
+                        <div class="transaction-container-record">
+                            <div class="transaction-container-record-date">{{transaction.date | date:'MMM dd, EEE' }}
+                            </div>
+                            <div class="transaction-container-record-payee">
+                                {{transaction['payee.name']}}</div>
+                            <div class="transaction-container-record-amount" [ngClass]="(transaction.amount > 0)?'credit':''">{{transaction.amount/100*-1 | currency}}</div>
+                        </div>
+                        <div class="transaction-container-record-notes">{{transaction.notes}}</div>
                     </div>
+
                     }
 
                 </div>

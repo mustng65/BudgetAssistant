@@ -1,7 +1,7 @@
 import { Component, computed, OnInit, signal } from '@angular/core';
 import { ActualBudgetService, CategoryGroup, Category } from '../../services/actual-budget.service';
 import { MatCardModule } from '@angular/material/card';
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CurrencyPipe, NgClass, DatePipe } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
 import { DateTime } from 'luxon';
@@ -18,7 +18,8 @@ import { MatInputModule } from '@angular/material/input';
     MatDatepickerModule,
     FormsModule,
     ReactiveFormsModule,
-    DatePipe
+    NgClass,
+    DatePipe,
   ],
   templateUrl: './buckets.html',
   styleUrl: './buckets.scss',
@@ -50,7 +51,6 @@ export class Buckets implements OnInit {
       const group = res.categoryGroups.filter((group) => group['name'] === 'Buckets')[0];
 
       this.budget.getCategoryGroups(year, month).subscribe((categories) => {
-
         group.categories.forEach((category) => {
           const groupWithTransactions = categories.filter((g) => g['name'] === category.name)[0];
 

@@ -13,9 +13,9 @@
   width: 420px;
   min-height: 400px;
   @include mat.elevation(2);
-  &:hover {
-    @include mat.elevation(4);
-  }
+  // &:hover {
+  //   @include mat.elevation(4);
+  // }
 }
 
 .header {
@@ -43,7 +43,7 @@
     font-weight: 600;
     align-self: center;
     flex-grow: 1;
-    opacity: .84;
+    opacity: 0.84;
   }
 
   @include mat.form-field-overrides(
@@ -79,15 +79,43 @@
 
   background-color: var(--mat-sys-surface-container-low);
 
-  &-record{
-    display: flex; 
-    justify-content: space-between;
+  &-row {
     border-bottom: 1px solid var(--mat-sys-outline-variant);
+    padding-bottom: 3px;
+  }
+  &-row:nth-child(odd) {
+    background-color: var(--mat-sys-surface-container-high);
+  }
+
+  &-record {
+    display: flex;
+    justify-content: space-between;
+
     padding-top: 4px;
     padding-bottom: 2px;
+    gap: 5px;
 
-    &:nth-child(odd) {
-      background-color: var(--mat-sys-surface-container-high);
+    &-date {
+      width: 80px;
+    }
+    &-payee {
+      text-overflow: ellipsis;
+      max-width: 220px;
+      overflow: hidden;
+      white-space: nowrap;
+      flex-grow: 1;
+    }
+
+    &-amount {
+      &.credit {
+        color: green;
+      }
+    }
+
+    &-notes {
+      font: var(--mat-sys-body-small);
+      letter-spacing: var(--mat-sys-body-small-tracking);
+      color: var(--mat-sys-on-surface-variant);
     }
   }
 }
