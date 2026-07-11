@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { Buckets } from '../../budget/buckets/buckets';
 
 @Component({
   selector: 'app-home',
-  imports: [ Buckets],
+  imports: [],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
