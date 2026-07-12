@@ -7,6 +7,41 @@
 
 </div>
 
+<div class="group-header">Additional</div>
+<div class="group-transactions-container">
+    <div class="group-transactions-container-row row-header">
+        <div>Name</div>
+        <div>Start Amount</div>
+        <div>Used amount</div>
+        <div>Current Amount</div>
+        <div>Amount Added</div>
+        <div>New Amount</div>
+    </div>
+    @for (category of additionalCategories(); track $index) {
+
+    <div class="group-transactions-container-row">
+        <div>{{category.name}}</div>
+        <div>{{0 | currency}}</div>
+        <div>{{0 | currency}}</div>
+        <div>{{category.balance/100 | currency}}</div>
+
+
+        <mat-form-field appearance="outline" floatLabel="always">
+            <mat-label>New Budget</mat-label>
+            <input matInput placeholder="0.00" [(ngModel)]="category.addedAmount" (ngModelChange)="updateNewBalance()">
+            <!-- <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+            <mat-hint>Hint</mat-hint> -->
+        </mat-form-field>
+
+        <div>{{(category.balance+(category.addedAmount?category.addedAmount:0) *100)/100 |
+            currency}}</div>
+
+    </div>
+    }
+
+</div>
+
+
 
 @for (group of currentCategoryGroups(); track $index) {
 <div class="group-header">{{group.name}}</div>
@@ -43,3 +78,11 @@
 
 </div>
 }
+
+<div class="header">
+    @if(savingsAccount(); as account){
+    <div>Starting Total: {{startingTotal()/100 |currency}}</div>
+    <div>Current Total: {{currentTotal()/100 |currency}}</div>
+    }
+
+</div>
