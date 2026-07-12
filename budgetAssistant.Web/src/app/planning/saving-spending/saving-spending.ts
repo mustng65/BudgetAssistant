@@ -1,4 +1,4 @@
-import { Component, computed, Signal, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { ActualBudgetService, Account, CategoryGroup } from '../../services/actual-budget.service';
 import { CurrencyPipe } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
@@ -13,7 +13,6 @@ import { FormsModule } from '@angular/forms';
 })
 export class SavingSpending {
   savingsAccount = signal<Account | null>(null);
-  // savingsRemainingBalance = signal<number>(0);
   newSavingsRemainingBalance = signal<number>(0);
 
   startingCategoryGroups = signal<CategoryGroup[]>([]);
@@ -33,23 +32,6 @@ export class SavingSpending {
     );
     return (this.savingsAccount()?.balance_current || 0) - totalBalance;
   });
-
-  // newSavingsRemainingBalance = computed<number>(() => {
-  //   const totalBalance = this.currentCategoryGroups().reduce((total, group) => {
-  //     return (
-  //       total +
-  //       group.categories.reduce((subtotal, category) => {
-  //         return subtotal + category.balance + category.addedAmount
-  //           ? category.addedAmount
-  //           : 0 * 100;
-  //       }, 0)
-  //     );
-  //   }, 0);
-  //   console.log(
-  //     `starting total balance: ${totalBalance} | Current Balance: ${this.savingsAccount()?.balance_current}`,
-  //   );
-  //   return (this.savingsAccount()?.balance_current || 0) - totalBalance;
-  // });
 
   savingSpendingGroups = [
     'Travel',
@@ -80,15 +62,6 @@ export class SavingSpending {
           (group) => this.savingSpendingGroups.find((g) => g == group.name) != null,
         );
 
-        // const totalBalance = startSavingsCategories.reduce((total, group) => {
-        //   return (
-        //     total +
-        //     group.categories.reduce((subtotal, category) => {
-        //       return subtotal + category.balance;
-        //     }, 0)
-        //   );
-        // }, 0);
-
         this.startingCategoryGroups.set(startSavingsCategories);
         this.currentCategoryGroups.set(currentSavingsCategories);
         this.updateNewBalance();
@@ -110,7 +83,6 @@ export class SavingSpending {
     });
 
   updateNewBalance() {
-
     const totalBalance = this.currentCategoryGroups().reduce((total, group) => {
       return (
         total +
