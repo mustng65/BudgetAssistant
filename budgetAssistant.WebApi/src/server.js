@@ -59,6 +59,17 @@ app.use(errorHandler);
 // Startup sequence
 (async () => {
   try {
+    // Accessing the version from process.env
+    const appVersion = process.env.npm_package_version;
+    const header = "\n\
+  ____              _                  _               _       _                 _        _     ____  ___ \n\
+ | __ )  _   _   __| |  __ _   ___    / \\    ___  ___ (_) ___ | |_  __ _  _ __  | |_     / \\   |  _ \\|_ _|\n\
+ |  _ \\ | | | | / _` | / _` | / _ \\  / _ \\  / __|/ __|| |/ __|| __|/ _` || '_ \\ | __|   / _ \\  | |_) || | \n\
+ | |_) || |_| || (_| || (_| ||  __/ / ___ \\ \\__ \\\\__ \\| |\\__ \\| |_| (_| || | | || |_   / ___ \\ |  __/ | | \n\
+ |____/  \\__,_| \\__,_| \\__, | \\___|/_/   \\_\\|___/|___/|_||___/ \\__|\\__,_||_| |_| \\__| /_/   \\_\\|_|   |___|\n\
+                       |___/                                                                Version " + appVersion + "\n"
+    console.log(header);
+    
     logger.info(`Starting ${SERVICE_NAME} server...`);
 
     await initActualApi();
