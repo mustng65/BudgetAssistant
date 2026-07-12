@@ -1,0 +1,64 @@
+<div class="header">
+    <div class="selected-date">{{date.value?.monthLong}} {{date.value?.year}}</div>
+    <mat-form-field appearance="outline">
+        <mat-label>Choose a Month and Year</mat-label>
+        <input matInput [matDatepicker]="dp" [formControl]="date">
+        <!-- <mat-hint>MM/YYYY</mat-hint> -->
+        <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+        <mat-datepicker #dp startView="multi-year" (monthSelected)="setMonthAndYear($event, dp)"
+            panelClass="example-month-picker">
+        </mat-datepicker>
+    </mat-form-field>
+
+</div>
+
+<div class="work-area">
+    @if (bucketGroup()) {
+    <div style="display: flex;gap: 10px;flex-wrap: wrap;padding-top: 70px;">
+        @for (category of bucketGroup(); track category.id) {
+
+        <mat-card class="bucket-container" appearance="outlined">
+            <mat-card-header>
+                <!-- <div mat-card-avatar class="example-header-image"></div> -->
+                <mat-card-title>{{category.name}}</mat-card-title>
+                <mat-card-subtitle style="display: flex; flex-direction: column;width: 370px;">
+                    <div style="display: flex; justify-content: space-between; font-size: smaller;opacity: .64;">
+                        <div>Budget</div>
+                        <div>Spent</div>
+                        <div>Balance</div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <div>{{category.budgeted/100 | currency}}</div>
+                        <div>{{category.spent/100 | currency}}</div>
+                        <div>{{category.balance/100 | currency}}</div>
+                    </div>
+
+                </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content style="height: 100%;">
+
+                <div class="transaction-container">
+                    @for (transaction of category.transactions; track transaction.id) {
+                    <div class="transaction-container-row">
+                        <div class="transaction-container-record">
+                            <div class="transaction-container-record-date">{{transaction.date | date:'MMM dd, EEE' }}
+                            </div>
+                            <div class="transaction-container-record-payee">
+                                {{transaction['payee.name']}}</div>
+                            <div class="transaction-container-record-amount" [ngClass]="(transaction.amount > 0)?'credit':''">{{transaction.amount/100*-1 | currency}}</div>
+                        </div>
+                        <div class="transaction-container-record-notes">{{transaction.notes}}</div>
+                    </div>
+
+                    }
+
+                </div>
+
+            </mat-card-content>
+
+        </mat-card>
+        }
+    </div>
+    }
+
+</div>

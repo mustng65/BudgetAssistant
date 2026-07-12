@@ -10,12 +10,39 @@ import {
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { ActualBudgetService } from '../../services/actual-budget.service';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { provideLuxonDateAdapter } from '@angular/material-luxon-adapter';
+import { DateTime } from 'luxon';
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'MM/yyyy',
+  },
+  display: {
+    dateInput: 'MM/yyyy',
+    monthYearLabel: 'MMM yyyy',
+    dateA11yLabel: 'DD',
+    monthYearA11yLabel: 'MMMM yyyy',
+  },
+};
 
 @Component({
   selector: 'app-tithing-calc',
-  imports: [MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule, MatDividerModule],
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatDividerModule,
+    MatSelectModule,
+    MatDatepickerModule,
+  ],
   templateUrl: './tithing-calc.html',
   styleUrl: './tithing-calc.scss',
+  providers: [provideLuxonDateAdapter(MY_FORMATS)],
 })
 export class TithingCalc implements OnInit {
   remainingPaycheckAmt: string = '0';
@@ -29,13 +56,50 @@ export class TithingCalc implements OnInit {
   currencyLocale = 'en-us';
   currencySymbol = '$';
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private budget: ActualBudgetService,
+  ) {}
 
   ngOnInit(): void {
     this.paycheckForm = this.fb.group({
       paycheckAmt: [0, [Validators.required]],
       retirementDeduction: [305.47, [Validators.required]],
       extraIncome: [0],
+      mode: ['manual'],
+      budgetDate: [null],
+    });
+
+    this.paycheckForm.get('budgetDate')?.valueChanges.subscribe((value) => {
+      console.log('budgetDate valueChanges', value);
+      if (this.paycheckForm.get('mode')?.value == 'manual' || value == null) {
+        return;
+      }
+
+      const selectBudgetDate = value as Date;
+      const year = selectBudgetDate.getFullYear();
+      const month = selectBudgetDate.getMonth() + 1;
+
+      if (year < 2000) {
+        return;
+      }
+
+      this.budget.getBudget(year, month).subscribe({
+        next: (res) => {
+          const incomeGroup = res.categoryGroups.filter((c) => c['name'] == 'Income')[0];
+          const incomeList = incomeGroup.categories
+          const incomeAmt = incomeList.filter((c) => c.name == 'Income')[0];
+          const extraAmt = incomeList.filter((c) => c.name == 'Extra Income')[0];
+
+          this.paycheckForm.patchValue({
+            paycheckAmt: incomeAmt.received / 100,
+            extraIncome: extraAmt.received / 100,
+          });
+        },
+        error: (e) => {
+          this.paycheckForm.get('budgetDate')?.setErrors({ monthLoadError: e.error.error });
+        },
+      });
     });
 
     this.paycheckForm.valueChanges.subscribe((values) => {
@@ -68,5 +132,15 @@ export class TithingCalc implements OnInit {
         this.currencySymbol,
       );
     });
+  }
+  setMonthAndYear(normalizedMonthAndYear: DateTime, datepicker: MatDatepicker<DateTime>) {
+    const ctrlValue = DateTime.fromObject({
+      month: normalizedMonthAndYear.month,
+      year: normalizedMonthAndYear.year,
+    });
+
+    const selectedDate = new Date(ctrlValue.year, ctrlValue.month - 1, 1);
+    this.paycheckForm.get('budgetDate')?.setValue(selectedDate);
+    datepicker.close();
   }
 }

@@ -2,6 +2,30 @@
 
 
 <form class="paycheck-form" [formGroup]="paycheckForm">
+    <mat-form-field>
+        <mat-label>Select</mat-label>
+        <mat-select formControlName="mode">
+            <mat-option value="manual">Manual</mat-option>
+            <mat-option value="budget">Download from Budget</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    @if(paycheckForm.get('mode')?.value=='budget'){
+
+    <mat-form-field>
+        <mat-label>Choose a Month and Year</mat-label>
+        <input matInput [matDatepicker]="dp" formControlName="budgetDate">
+        <mat-hint>MM/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+        <mat-datepicker #dp startView="multi-year" (monthSelected)="setMonthAndYear($event, dp)"
+            panelClass="example-month-picker">
+        </mat-datepicker>
+        @if (paycheckForm.get('budgetDate')?.hasError('monthLoadError')) {
+        <mat-error>{{ paycheckForm.get('budgetDate')?.getError('monthLoadError') }}</mat-error>
+        }
+    </mat-form-field>
+
+    }
 
     <mat-form-field>
         <mat-label>Paycheck Amount</mat-label>

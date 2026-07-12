@@ -1,0 +1,9 @@
+@year=2026
+@month=05
+
+
+GET http://localhost:3000/budgets/{{year}}/{{month}}
+###
+
+GET http://localhost:3000/transactions/Buckets/{{year}}/{{month}}
+###
