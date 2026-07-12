@@ -6,18 +6,23 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ActualBudgetService {
+  private baseUrl = 'http://localhost:3000';
   constructor(private http: HttpClient) {}
 
   getBudget(year: number, month: number): Observable<Budget> {
     return this.http.get<Budget>(
-      `http://localhost:3000/budgets/${year}/${String(month).padStart(2, '0')}`,
+      `${this.baseUrl}/budgets/${year}/${String(month).padStart(2, '0')}`,
     );
   }
 
   getCategoryGroups(year: number, month: number): Observable<Category[]> {
     return this.http.get<Category[]>(
-      `http://localhost:3000/transactions/Buckets/${year}/${String(month).padStart(2, '0')}`,
+      `${this.baseUrl}/transactions/Buckets/${year}/${String(month).padStart(2, '0')}`,
     );
+  }
+
+  getAccountByName(name: String): Observable<Account[]> {
+    return this.http.get<Account[]>(`${this.baseUrl}/accounts?name=${name}&includeCurrentBalance`);
   }
 }
 
@@ -32,7 +37,7 @@ export interface Budget {
   totalIncome: number;
   totalSpent: number;
   totalBalance: number;
-  categoryGroups: CategoryGroup[]//Record<string, unknown>[];
+  categoryGroups: CategoryGroup[];
 }
 
 export interface CategoryGroup {
@@ -51,6 +56,7 @@ export interface Category {
   balance: number;
   received: number;
   transactions: Transaction[];
+  addedAmount: number;
 }
 
 export interface Transaction {
@@ -59,4 +65,12 @@ export interface Transaction {
   date: Date;
   amount: number;
   notes: string;
+}
+
+export interface Account {
+  id: string;
+  name: string;
+  offbudget: boolean;
+  closed: boolean;
+  balance_current: number;
 }
