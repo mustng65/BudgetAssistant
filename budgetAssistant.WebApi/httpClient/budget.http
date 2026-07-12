@@ -1,9 +1,19 @@
+@host=http://localhost:3000
 @year=2026
 @month=05
 
 
-GET http://localhost:3000/budgets/{{year}}/{{month}}
+GET {{host}}/budgets/{{year}}/{{month}}
 ###
 
-GET http://localhost:3000/transactions/Buckets/{{year}}/{{month}}
+GET {{host}}/transactions/Buckets/{{year}}/{{month}}
+###
+
+GET {{host}}/accounts
+###
+
+GET {{host}}/accounts?includeCurrentBalance
+###
+
+GET {{host}}/accounts?name=Savings&includeCurrentBalance
 ###

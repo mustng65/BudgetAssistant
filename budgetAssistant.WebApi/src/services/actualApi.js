@@ -147,9 +147,36 @@ export const transactionsCategoryGroupMonthList = async (categoryGroup, month) =
         'category.group.name': categoryGroup,
         date: { $transform: '$month', $eq: month },
       })
-      .select(['payee.name', 'date', 'amount', 'category.name','category.id', 'notes']));
+      .select(['payee.name', 'date', 'amount', 'category.name', 'category.id', 'notes']));
 
     logger.info('[Actual] transactionsMonthBucketsList result', { month, recordsFound: transactions.data.length });
     return transactions;
   });
 }
+
+
+// ================ ACCOUNTS ================
+export const accountList = async (includeCurrentBalance) => {
+  return runWithApi('accountList', async (apiInstance) => {
+    logger.debug('[Actual] Getting budget account list', { includeCurrentBalance });
+
+    let accounts = [];
+
+    if (includeCurrentBalance != null) {
+      const formattedDate = (new Date).toISOString().split('T')[0];
+      accounts = (await apiInstance.runQuery(apiInstance.q('transactions')
+        .filter({
+          date: { $lte: formattedDate }
+        })
+        .groupBy('account.name')
+        .select([{ id: 'account.id' }, { name: 'account.name' }, { offbudget: 'account.offbudget' }, { closed: 'account.closed' }, { balance_current: { $sum: "$amount" } }])
+      )).data;
+    } else {
+      accounts = await apiInstance.getAccounts();
+    }
+
+    logger.info('[Actual] accountList result', { count: accounts.length });
+    return accounts;
+  });
+};
+

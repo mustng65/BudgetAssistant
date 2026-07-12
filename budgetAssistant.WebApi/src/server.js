@@ -1,7 +1,7 @@
 import 'dotenv/config'; // Load variables from .env
 import express from 'express';
 import cors from 'cors';
-import { budgetMonthsList, budgetMonthGet, initActualApi, shutdownActualApi, transactionsCategoryGroupMonthList } from './services/actualApi.js';
+import { budgetMonthsList, budgetMonthGet, initActualApi, shutdownActualApi, transactionsCategoryGroupMonthList, accountList } from './services/actualApi.js';
 import logger from './logging/logger.js';
 import { asyncHandler } from './middleware/asyncHandler.js';
 import { errorHandler } from './middleware/errorHandler.js';
@@ -53,6 +53,19 @@ app.get('/transactions/:categoryGroup/:year/:month', asyncHandler(async (req, re
 
 }));
 
+app.get('/accounts', asyncHandler(async (req, res) => {
+
+  let accounts = await accountList(req.query.includeCurrentBalance);
+
+  if (req.query.name != null && req.query.name != '') {
+    accounts = accounts.filter(account => account.name == req.query.name)
+  }
+  res.set('Cache-Control', 'no-store');
+  res.status(200).json(accounts);
+
+}));
+
+
 // Global error handler (keeps responses consistent)
 app.use(errorHandler);
 
@@ -69,7 +82,7 @@ app.use(errorHandler);
  |____/  \\__,_| \\__,_| \\__, | \\___|/_/   \\_\\|___/|___/|_||___/ \\__|\\__,_||_| |_| \\__| /_/   \\_\\|_|   |___|\n\
                        |___/                                                                Version " + appVersion + "\n"
     console.log(header);
-    
+
     logger.info(`Starting ${SERVICE_NAME} server...`);
 
     await initActualApi();
