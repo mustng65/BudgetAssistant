@@ -11,7 +11,7 @@ import { RouterLink } from '@angular/router';
   styleUrl: './sidebar.scss',
 })
 export class Sidebar {
-  main = [{ title: 'Home', link: 'home', icon:'house' },{ title: 'Buckets', link: 'buckets', icon:'inventory_2' }];
+  main = [{ title: 'Home', link: 'home', icon:'house' },{ title: 'Planning', link: 'planning', icon:'savings' },{ title: 'Buckets', link: 'buckets', icon:'inventory_2' }];
   utilities = [{ title: 'Tithing Calculator', link: 'tithingCalc', icon:'calculate' }];
   activeLink: string | null = null;
 }

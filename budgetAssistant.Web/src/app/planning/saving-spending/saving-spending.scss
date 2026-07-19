@@ -1,0 +1,88 @@
+@use '@angular/material' as mat;
+
+:host {
+  overflow-y: scroll;
+  display: block;
+  height: calc(100vh - 150px);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background-color: var(--mat-sys-primary);
+  border-radius: var(--mat-sys-corner-medium);
+  border: 1px solid var(--mat-sys-outline-variant);
+
+  min-height: 60px;
+  margin: 20px 0px;
+  padding: 0px 20px;
+
+  color: var(--mat-sys-on-primary);
+  font: var(--mat-sys-headline-small);
+  letter-spacing: var(--mat-sys-headline-small-tracking);
+}
+
+.group {
+  &-header {
+    background-color: var(--mat-sys-surface-variant);
+    border-radius: var(--mat-sys-corner-medium);
+    border: 1px solid var(--mat-sys-outline-variant);
+    box-shadow: var(--mat-sys-level1);
+    width: calc(100% - 15px);
+    min-height: 30px;
+    padding: 5px;
+    margin: 10px 0px;
+
+    color: var(--mat-sys-on-surface);
+    font: var(--mat-sys-title-large);
+    letter-spacing: var(--mat-sys-title-large-tracking);
+  }
+
+  &-transactions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin: 0px 10px;
+    &-row {
+      display: flex;
+      justify-content: space-between;
+
+      & > div {
+        width: 125px;
+        text-align: end;
+        margin-top: 10px;
+      }
+
+      & > mat-form-field {
+        width: 125px;
+      }
+
+      & > div:first-child {
+        width: 200px;
+        text-align: start;
+      }
+
+      &.row-header {
+        & > div:nth-last-child(2){
+            text-align: center;
+        }
+
+        font: var(--mat-sys-title-small);
+        letter-spacing: var(--mat-sys-title-small-tracking);
+      }
+
+      @include mat.form-field-overrides(
+        (
+          container-height: 30px,
+          container-text-line-height: var(--mat-sys-body-small-line-height),
+          container-vertical-padding: 10px,
+          filled-with-label-container-padding-top: 0px,
+          filled-with-label-container-padding-bottom: 0px,
+          container-text-size: var(--mat-sys-body-medium-size),
+        )
+      );
+    }
+  }
+}

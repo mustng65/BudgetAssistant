@@ -71,7 +71,6 @@ export class TithingCalc implements OnInit {
     });
 
     this.paycheckForm.get('budgetDate')?.valueChanges.subscribe((value) => {
-      console.log('budgetDate valueChanges', value);
       if (this.paycheckForm.get('mode')?.value == 'manual' || value == null) {
         return;
       }
@@ -86,9 +85,9 @@ export class TithingCalc implements OnInit {
 
       this.budget.getBudget(year, month).subscribe({
         next: (res) => {
-          const incomeGroup = res.categoryGroups.filter((c) => c['name'] == 'Income')[0];
+          const incomeGroup = res.categoryGroups.filter((c) => c.name == 'Income')[0];
           const incomeList = incomeGroup.categories
-          const incomeAmt = incomeList.filter((c) => c.name == 'Income')[0];
+          const incomeAmt = incomeList.filter((c) => c.name == 'Salary')[0];
           const extraAmt = incomeList.filter((c) => c.name == 'Extra Income')[0];
 
           this.paycheckForm.patchValue({
