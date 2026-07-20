@@ -73,7 +73,7 @@ app.use(errorHandler);
 (async () => {
   try {
     // Accessing the version from process.env
-    const appVersion = process.env.npm_package_version;
+    const appVersion = process.env.APP_VERSION;
     const header = "\n\
   ____              _                  _               _       _                 _        _     ____  ___ \n\
  | __ )  _   _   __| |  __ _   ___    / \\    ___  ___ (_) ___ | |_  __ _  _ __  | |_     / \\   |  _ \\|_ _|\n\

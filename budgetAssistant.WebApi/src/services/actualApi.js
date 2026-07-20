@@ -14,6 +14,13 @@ let api = null;
 export const initActualApi = async () => {
   if (api) return api;
 
+  const { default: fs } = await import('fs');
+
+  if(!fs.existsSync(DATA_DIR)){
+    logger.info(`Creating cache directory '${DATA_DIR}'...`);
+    fs.mkdirSync(DATA_DIR);
+  }
+
   const { default: actualApi } = await import('@actual-app/api');
   api = actualApi;
 
