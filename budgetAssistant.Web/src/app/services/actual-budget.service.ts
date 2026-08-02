@@ -13,8 +13,8 @@ export class ActualBudgetService {
     return this.http.get<Budget>(`${this.baseUrl}/budgets/${year}/${String(month).padStart(2, '0')}`);
   }
 
-  getCategoryGroupTransactions(year: number, month: number, categoryGroup: string = 'Buckets'): Observable<Category[]> {
-    return this.http.get<Category[]>(encodeURI(`${this.baseUrl}/transactions/${categoryGroup}/${year}/${String(month).padStart(2, '0')}`));
+  getCategoryGroupTransactions(year: number, month: number, categoryGroupId: string): Observable<Category[]> {
+    return this.http.get<Category[]>(encodeURI(`${this.baseUrl}/transactions/${categoryGroupId}/${year}/${String(month).padStart(2, '0')}`));
   }
 
   getAccountByName(name: String): Observable<Account[]> {

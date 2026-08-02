@@ -16,7 +16,7 @@ export const initActualApi = async () => {
 
   const { default: fs } = await import('fs');
 
-  if(!fs.existsSync(DATA_DIR)){
+  if (!fs.existsSync(DATA_DIR)) {
     logger.info(`Creating cache directory '${DATA_DIR}'...`);
     fs.mkdirSync(DATA_DIR);
   }
@@ -145,18 +145,22 @@ export const budgetMonthGet = async (month) => {
 
 
 // ================ TRANSACTIONS ================
-export const transactionsCategoryGroupMonthList = async (categoryGroup, month) => {
+export const transactionsCategoryGroupMonthList = async (categoryGroupId, month) => {
   return runWithApi('transactionsMonthBucketsList', async (apiInstance) => {
-    logger.debug('[Actual] Getting budget month category transactions', { categoryGroup, month });
+    logger.debug('[Actual] Getting budget month category transactions', { categoryGroupId, month });
 
     const transactions = await apiInstance.runQuery(apiInstance.q('transactions')
       .filter({
-        'category.group.name': categoryGroup,
+        'category.group.id': categoryGroupId,
         date: { $transform: '$month', $eq: month },
       })
-      .select(['payee.name', 'date', 'amount', 'category.name', 'category.id', 'notes']));
+      .select(['payee.name', 'date', 'amount', 'category.name', 'category.id', 'notes', 'category.group.name']));
 
-    logger.info('[Actual] transactionsMonthBucketsList result', { month, recordsFound: transactions.data.length });
+    let categoryGroup = categoryGroupId;
+    if (transactions.data.length > 0) {
+      categoryGroup = transactions.data[0]['category.group.name'];
+    }
+    logger.info('[Actual] transactionsMonthBucketsList result', { categoryGroup, month, recordsFound: transactions.data.length });
     return transactions;
   });
 }
