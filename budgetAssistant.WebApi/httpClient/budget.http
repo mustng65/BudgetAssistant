@@ -1,12 +1,16 @@
 @host=http://localhost:3000
-@year=2026
-@month=05
+@year=2024
+@month=12
 
 
 GET {{host}}/budgets/{{year}}/{{month}}
 ###
 
 GET {{host}}/transactions/Buckets/{{year}}/{{month}}
+###
+
+
+GET {{host}}/transactions/Investments%20and%20Savings/{{year}}/{{month}}
 ###
 
 GET {{host}}/accounts
