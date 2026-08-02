@@ -16,7 +16,7 @@ export const initActualApi = async () => {
 
   const { default: fs } = await import('fs');
 
-  if(!fs.existsSync(DATA_DIR)){
+  if (!fs.existsSync(DATA_DIR)) {
     logger.info(`Creating cache directory '${DATA_DIR}'...`);
     fs.mkdirSync(DATA_DIR);
   }
@@ -154,9 +154,13 @@ export const transactionsCategoryGroupMonthList = async (categoryGroupId, month)
         'category.group.id': categoryGroupId,
         date: { $transform: '$month', $eq: month },
       })
-      .select(['payee.name', 'date', 'amount', 'category.name', 'category.id', 'notes','category.group.name']));
+      .select(['payee.name', 'date', 'amount', 'category.name', 'category.id', 'notes', 'category.group.name']));
 
-    logger.info('[Actual] transactionsMonthBucketsList result', {categoryGroup:transactions.data[0]['category.group.name'], month, recordsFound: transactions.data.length });
+    let categoryGroup = categoryGroupId;
+    if (transactions.data.length > 0) {
+      categoryGroup = transactions.data[0]['category.group.name'];
+    }
+    logger.info('[Actual] transactionsMonthBucketsList result', { categoryGroup, month, recordsFound: transactions.data.length });
     return transactions;
   });
 }
