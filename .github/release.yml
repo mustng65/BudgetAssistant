@@ -21,6 +21,10 @@ changelog:
         - maintenance
         - performance
 
+    - title: 🐞 Bugs
+      labels:
+        - bug
+
     - title: 🚀 Other changes
       labels:
         - "*"
