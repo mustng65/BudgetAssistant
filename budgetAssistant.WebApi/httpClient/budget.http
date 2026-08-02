@@ -1,4 +1,6 @@
-@host=http://localhost:3000
+# @host=http://localhost:3000
+@host=http://localhost:4200/api
+# @host=https://budget-assistant.dtkcp.duckdns.org/api
 @year=2024
 @month=12
 
@@ -6,11 +8,12 @@
 GET {{host}}/budgets/{{year}}/{{month}}
 ###
 
-GET {{host}}/transactions/Buckets/{{year}}/{{month}}
+# Buckets group
+GET {{host}}/transactions/fc3825fd-b982-4b72-b768-5b30844cf832/{{year}}/{{month}}
 ###
 
-
-GET {{host}}/transactions/Investments%20and%20Savings/{{year}}/{{month}}
+# Savings and Investments group
+GET {{host}}/transactions/a137772f-cf2f-4089-9432-822d2ddc1466/{{year}}/{{month}}
 ###
 
 GET {{host}}/accounts

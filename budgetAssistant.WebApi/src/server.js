@@ -34,9 +34,9 @@ app.get('/budgets/:year/:month', asyncHandler(async (req, res) => {
 
 }));
 
-app.get('/transactions/:categoryGroup/:year/:month', asyncHandler(async (req, res) => {
+app.get('/transactions/:categoryGroupId/:year/:month', asyncHandler(async (req, res) => {
 
-  const budget = await transactionsCategoryGroupMonthList(req.params.categoryGroup, `${req.params.year}-${req.params.month}`)
+  const budget = await transactionsCategoryGroupMonthList(req.params.categoryGroupId, `${req.params.year}-${req.params.month}`)
   const groups = Object.groupBy(budget.data, transaction => transaction["category.name"])
 
   const response = [];
