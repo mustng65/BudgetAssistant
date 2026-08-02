@@ -1,5 +1,5 @@
-import { Component, computed, OnInit, signal } from '@angular/core';
-import { ActualBudgetService, CategoryGroup, Category } from '../../services/actual-budget.service';
+import { Component, OnInit, signal } from '@angular/core';
+import { ActualBudgetService, Category } from '../../services/actual-budget.service';
 import { MatCardModule } from '@angular/material/card';
 import { CurrencyPipe, NgClass, DatePipe } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,6 +7,7 @@ import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker
 import { DateTime } from 'luxon';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-buckets',
@@ -48,17 +49,41 @@ export class Buckets implements OnInit {
     const month = value.month;
 
     this.budget.getBudget(year, month).subscribe((res) => {
-      const group = res.categoryGroups.filter((group) => group['name'] === 'Buckets')[0];
+      forkJoin([
+        this.budget.getCategoryGroupTransactions(year, month),
+        this.budget.getCategoryGroupTransactions(year, month, 'Investments and Savings'),
+      ]).subscribe(([bucketsCategories, savingsCategories]) => {
+        const bucketsGroup = res.categoryGroups.filter((group) => group['name'] === 'Buckets')[0];
+        const savingsGroup = res.categoryGroups.filter((group) => group['name'] === 'Investments and Savings')[0];
 
-      this.budget.getCategoryGroups(year, month).subscribe((categories) => {
-        group.categories.forEach((category) => {
-          const groupWithTransactions = categories.filter((g) => g['name'] === category.name)[0];
+        // process all the buckets and load their transactions for the month if they are present
+        bucketsGroup.categories.forEach((category) => {
+          const groupWithTransactions = bucketsCategories.filter((g) => g['name'] === category.name)[0];
 
           if (groupWithTransactions) {
             category.transactions = groupWithTransactions.transactions;
           }
         });
-        this.bucketGroup.set(group.categories);
+
+        const outOfSavings = savingsGroup.categories.filter((category) => category.name == 'Out of Savings')[0];
+        const savings = savingsGroup.categories.filter((category) => category.name == 'Savings')[0];
+
+        // get the budgeted amount for savings for the month
+        outOfSavings.budgeted = savings.budgeted;
+        // calculate the remain (or overspent) amount for the month
+        outOfSavings.balance = savings.budgeted - outOfSavings.spent * -1;
+
+        // add the out of savings bucket to the rest of the buckets
+        bucketsGroup.categories.push(outOfSavings);
+
+        // load the out of savings transactions for the month if they are present
+        const outOfSavingsTransactions = savingsCategories.filter((category) => category.name == 'Out of Savings')[0];
+        if (outOfSavingsTransactions) {
+          outOfSavings.transactions = outOfSavingsTransactions.transactions;
+        }
+
+        // update the screen
+        this.bucketGroup.set(bucketsGroup.categories);
       });
     });
   }

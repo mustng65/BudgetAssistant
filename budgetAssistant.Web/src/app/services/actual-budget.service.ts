@@ -10,15 +10,11 @@ export class ActualBudgetService {
   constructor(private http: HttpClient) {}
 
   getBudget(year: number, month: number): Observable<Budget> {
-    return this.http.get<Budget>(
-      `${this.baseUrl}/budgets/${year}/${String(month).padStart(2, '0')}`,
-    );
+    return this.http.get<Budget>(`${this.baseUrl}/budgets/${year}/${String(month).padStart(2, '0')}`);
   }
 
-  getCategoryGroups(year: number, month: number): Observable<Category[]> {
-    return this.http.get<Category[]>(
-      `${this.baseUrl}/transactions/Buckets/${year}/${String(month).padStart(2, '0')}`,
-    );
+  getCategoryGroupTransactions(year: number, month: number, categoryGroup: string = 'Buckets'): Observable<Category[]> {
+    return this.http.get<Category[]>(encodeURI(`${this.baseUrl}/transactions/${categoryGroup}/${year}/${String(month).padStart(2, '0')}`));
   }
 
   getAccountByName(name: String): Observable<Account[]> {
