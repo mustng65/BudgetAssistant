@@ -49,12 +49,15 @@ export class Buckets implements OnInit {
     const month = value.month;
 
     this.budget.getBudget(year, month).subscribe((res) => {
+      const bucketGroupId = res.categoryGroups.filter((group) => (group.name == 'Buckets'))[0].id;
+      const savingsGroupId = res.categoryGroups.filter((group) => (group.name == 'Investments and Savings'))[0].id;
+
       forkJoin([
-        this.budget.getCategoryGroupTransactions(year, month),
-        this.budget.getCategoryGroupTransactions(year, month, 'Investments and Savings'),
+        this.budget.getCategoryGroupTransactions(year, month, bucketGroupId),
+        this.budget.getCategoryGroupTransactions(year, month, savingsGroupId),
       ]).subscribe(([bucketsCategories, savingsCategories]) => {
-        const bucketsGroup = res.categoryGroups.filter((group) => group['name'] === 'Buckets')[0];
-        const savingsGroup = res.categoryGroups.filter((group) => group['name'] === 'Investments and Savings')[0];
+        const bucketsGroup = res.categoryGroups.filter((group) => group['id'] === bucketGroupId)[0];
+        const savingsGroup = res.categoryGroups.filter((group) => group['id'] === savingsGroupId)[0];
 
         // process all the buckets and load their transactions for the month if they are present
         bucketsGroup.categories.forEach((category) => {
