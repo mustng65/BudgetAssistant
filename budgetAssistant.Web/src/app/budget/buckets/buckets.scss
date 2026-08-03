@@ -38,32 +38,35 @@
   flex-direction: row;
   align-items: start;
 
+  &-filler {
+    flex-grow: 1;
+  }
+
   .selected-date {
     font-size: 30px;
     font-weight: 600;
     align-self: center;
-    flex-grow: 1;
+    // flex-grow: 1;
     opacity: 0.84;
   }
 
-  @include mat.form-field-overrides(
-    (
-      container-height: 30px,
-      container-text-line-height: var(--mat-sys-body-small-line-height),
-      container-vertical-padding: 10px,
-      filled-with-label-container-padding-top: 0px,
-      filled-with-label-container-padding-bottom: 0px,
-      container-text-size: var(--mat-sys-body-medium-size),
-    )
-  );
 
-  @include mat.icon-button-overrides(
-    (
-      icon-size: 20px,
-      touch-target-size: 20px,
-      state-layer-size: 30px,
-    )
-  );
+
+  .my-date-picker {
+    @include mat.form-field-overrides((container-height: 30px,
+        container-text-line-height: var(--mat-sys-body-small-line-height),
+        container-vertical-padding: 10px,
+        filled-with-label-container-padding-top: 0px,
+        filled-with-label-container-padding-bottom: 0px,
+        container-text-size: var(--mat-sys-body-medium-size),
+      ));
+
+    @include mat.icon-button-overrides((icon-size: 20px,
+        touch-target-size: 20px,
+        state-layer-size: 30px,
+      ));
+  }
+
 }
 
 .transaction-container {
@@ -83,6 +86,7 @@
     border-bottom: 1px solid var(--mat-sys-outline-variant);
     padding-bottom: 3px;
   }
+
   &-row:nth-child(odd) {
     background-color: var(--mat-sys-surface-container-high);
   }
@@ -98,6 +102,7 @@
     &-date {
       width: 80px;
     }
+
     &-payee {
       text-overflow: ellipsis;
       max-width: 220px;

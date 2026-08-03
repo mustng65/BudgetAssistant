@@ -8,6 +8,8 @@ import { DateTime } from 'luxon';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { forkJoin } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-buckets',
@@ -19,6 +21,8 @@ import { forkJoin } from 'rxjs';
     MatDatepickerModule,
     FormsModule,
     ReactiveFormsModule,
+    MatIconModule,
+    MatButtonModule,
     NgClass,
     DatePipe,
   ],
@@ -28,6 +32,12 @@ import { forkJoin } from 'rxjs';
 export class Buckets implements OnInit {
   bucketGroup = signal<Category[]>([]);
   date!: FormControl<DateTime | null>;
+
+  previousMonthEnabled = signal(true);
+  nextMonthEnabled = signal(false);
+
+  currentDate = DateTime.now();
+  oldestDate = DateTime.fromObject({ year: 2024, month: 1 });
 
   constructor(private budget: ActualBudgetService) {}
 
@@ -49,8 +59,8 @@ export class Buckets implements OnInit {
     const month = value.month;
 
     this.budget.getBudget(year, month).subscribe((res) => {
-      const bucketGroupId = res.categoryGroups.filter((group) => (group.name == 'Buckets'))[0].id;
-      const savingsGroupId = res.categoryGroups.filter((group) => (group.name == 'Investments and Savings'))[0].id;
+      const bucketGroupId = res.categoryGroups.filter((group) => group.name == 'Buckets')[0].id;
+      const savingsGroupId = res.categoryGroups.filter((group) => group.name == 'Investments and Savings')[0].id;
 
       forkJoin([
         this.budget.getCategoryGroupTransactions(year, month, bucketGroupId),
@@ -89,6 +99,26 @@ export class Buckets implements OnInit {
         this.bucketGroup.set(bucketsGroup.categories);
       });
     });
+  }
+
+  previousMonth() {
+    const currentDate = this.date.value!;
+    const previousMonthDate = currentDate.minus({ months: 1 });
+    this.date.setValue(previousMonthDate);
+    this.nextMonthEnabled.set(true);
+    if (previousMonthDate.month === this.oldestDate.month && previousMonthDate.year === this.oldestDate.year) {
+      this.previousMonthEnabled.set(false);
+    }
+  }
+
+  nextMonth() {
+    const currentDate = this.date.value!;
+    const nextMonthDate = currentDate.plus({ months: 1 });
+    this.date.setValue(nextMonthDate);
+    this.previousMonthEnabled.set(true);
+    if (nextMonthDate.month === this.currentDate.month && nextMonthDate.year === this.currentDate.year) {
+      this.nextMonthEnabled.set(false);
+    }
   }
 
   setMonthAndYear(normalizedMonthAndYear: DateTime, datepicker: MatDatepicker<DateTime>) {
