@@ -64,7 +64,7 @@ export class TithingCalc implements OnInit {
   ngOnInit(): void {
     this.paycheckForm = this.fb.group({
       paycheckAmt: [0, [Validators.required]],
-      retirementDeduction: [305.47, [Validators.required]],
+      retirementDeduction: [329.58, [Validators.required]],
       extraIncome: [0],
       mode: ['manual'],
       budgetDate: [null],
