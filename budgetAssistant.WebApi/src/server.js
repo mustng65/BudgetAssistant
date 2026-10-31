@@ -5,18 +5,31 @@ import { budgetMonthsList, budgetMonthGet, initActualApi, shutdownActualApi, tra
 import logger from './logging/logger.js';
 import { asyncHandler } from './middleware/asyncHandler.js';
 import { errorHandler } from './middleware/errorHandler.js';
-import { SERVICE_NAME } from './config/index.js'
+import { SERVICE_NAME } from './config/index.js';
+import { closeDatabase, getAllSettings, setSetting, getSqliteDbPath, initializeDatabase } from './database/sqlite.js';
 
 const app = express();
 const PORT = 3000;
 
 app.use(cors());
+app.use(express.json());
 
 app.get('/', (req, res) => {
   res.status(200);
   res.send("Welcome to root URL of Server");
 });
 
+app.get('/settings', asyncHandler(async (req, res) => {
+  const settings = getAllSettings();
+  res.set('Cache-Control', 'no-store');
+  res.status(200).json(settings);
+}));
+
+app.post('/settings', asyncHandler(async (req, res) => {
+  const { key, value } = req.body;
+  setSetting(key, value);
+  res.status(201).json(getAllSettings());
+}));
 
 app.get('/budgets', asyncHandler(async (req, res) => {
 
@@ -85,10 +98,12 @@ app.use(errorHandler);
 
     logger.info(`Starting ${SERVICE_NAME} server...`);
 
+    initializeDatabase();
     await initActualApi();
 
     logger.info('Startup complete', {
       port: PORT,
+      databasePath: getSqliteDbPath(),
       // env: NODE_ENV,
     });
   } catch (err) {
@@ -103,6 +118,7 @@ const shutdown = async (signal) => {
 
   try {
     await shutdownActualApi();
+    closeDatabase();
     logger.info('Shutdown complete');
     process.exit(0);
   } catch (err) {

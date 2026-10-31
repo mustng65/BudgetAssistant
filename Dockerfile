@@ -48,6 +48,7 @@ ARG APP_VERSION
 ENV ACTUAL_SERVER_URL=""
 ENV ACTUAL_PASSWORD=""
 ENV ACTUAL_SYNC_ID=""
+ENV SQLITE_DB_PATH="/data/budgetassistant.db"
 ENV APP_VERSION=${APP_VERSION:-1.0.0}
 
 
@@ -61,7 +62,7 @@ COPY --from=builder /app/dist/*/browser /usr/share/nginx/html
 COPY --from=server /app /usr/share/nginx/node-server
 
 # Install Node.js in the final stage to support backend operations
-RUN apk add --no-cache nodejs npm
+RUN apk add --no-cache nodejs npm && mkdir -p /data
 
 # Expose the necessary ports
 EXPOSE 8080  

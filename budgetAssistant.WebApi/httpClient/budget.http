@@ -1,6 +1,5 @@
-# @host=http://localhost:3000
-@host=http://localhost:4200/api
-# @host=***REMOVED***
+@host=http://localhost:3000
+# @host=http://localhost:4200/api
 @year=2024
 @month=12
 
@@ -23,4 +22,16 @@ GET {{host}}/accounts?includeCurrentBalance
 ###
 
 GET {{host}}/accounts?name=Savings&includeCurrentBalance
+###
+
+GET {{host}}/settings
+###
+
+POST {{host}}/settings
+content-type: application/json
+
+{
+    "key": "otherSetting",
+    "value": "somethingelse"
+}
 ###
