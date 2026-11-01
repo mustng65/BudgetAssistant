@@ -25,6 +25,9 @@ FROM node:${NODE_VERSION} AS server
 
 WORKDIR /app
 
+# Install build tools required by node-gyp
+RUN apk add --no-cache --virtual .build-deps make gcc g++ python3
+
 # Copy only the package files for the Node.js backend
 COPY budgetAssistant.WebApi/package*.json ./
 
